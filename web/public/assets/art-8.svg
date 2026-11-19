@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100">
+      <defs>
+        <filter id="grain"><feTurbulence baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .09 0"/></filter>
+        <radialGradient id="wash"><stop stop-color="#b89a65" stop-opacity=".55"/><stop offset="1" stop-color="#e8e0d2" stop-opacity="0"/></radialGradient>
+        <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#e8e0d2"/><stop offset="1" stop-color="#f8f4eb"/></linearGradient>
+      </defs>
+      <rect width="900" height="1100" fill="url(#bg)"/>
+      <circle cx="554" cy="290" r="168" fill="url(#wash)"/>
+      <circle cx="554" cy="290" r="101" fill="#263d49" opacity=".12"/>
+      <path d="M0 810 Q230 690 405 804 T900 774 V1100 H0Z" fill="#9a7462" opacity=".13"/>
+      
+        <path d="M80 635 Q225 412 343 578 Q470 340 602 566 Q725 424 830 637Z" fill="#9a7462" opacity=".55"/>
+        <path d="M55 681 Q240 471 380 646 Q512 449 688 655 Q769 559 850 684Z" fill="#5c3133" opacity=".88"/>
+        <path d="M60 708 Q263 566 422 700 Q607 558 839 710Z" fill="#263d49" opacity=".68"/>
+        <path d="M70 732 Q302 662 497 726 T850 719" stroke="#b89a65" stroke-width="5" fill="none" opacity=".7"/>
+        <path d="M214 243 Q254 222 294 243 M235 263 Q274 242 314 263" stroke="#5c3133" stroke-width="4" fill="none"/>
+        <path d="M706 330 Q731 309 757 330 M723 349 Q748 328 774 349" stroke="#5c3133" stroke-width="3" fill="none"/>
+        
+      <g opacity=".12" stroke="#5c3133"><path d="M40 60 H210 M40 75 H155"/><path d="M690 1020 H860 M746 1035 H860"/></g>
+      <rect width="900" height="1100" filter="url(#grain)" opacity=".7"/>
+      <g transform="translate(735 820)"><rect width="90" height="90" rx="3" fill="#263d49"/><text x="45" y="38" text-anchor="middle" fill="#f6ead8" font-size="29" font-family="serif">镜绘</text><text x="45" y="69" text-anchor="middle" fill="#f6ead8" font-size="18" font-family="serif">珍藏</text></g>
+      <text x="72" y="105" fill="#5c3133" font-size="20" letter-spacing="8" font-family="serif">JINGHUI · 东方意象</text>
+    </svg>

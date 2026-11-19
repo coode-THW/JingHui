@@ -1,0 +1,24 @@
+# Python / backend
+server/.venv/
+server/jinghui.db
+server/static/generated/
+**/__pycache__/
+*.pyc
+.env
+.env.local
+
+# Node / frontend
+web/node_modules/
+web/dist/
+web/tsconfig.tsbuildinfo
+npm-debug.log*
+
+# Project data & IDE
+.workbuddy/
+.idea/
+.vscode/
+*.code-workspace
+
+# OS
+Thumbs.db
+.DS_Store
