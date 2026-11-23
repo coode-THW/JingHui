@@ -30,7 +30,7 @@
           </div>
         </section>
         <section class="paper-card profile-card">
-          <div class="card-title"><h2 class="serif">账号信息</h2><button class="edit-btn" @click="editing=!editing">{{ editing?'完成':'编辑' }}</button></div>
+          <div class="card-title"><h2 class="serif">账号信息</h2><button class="edit-btn" :aria-expanded="editing" :aria-label="editing?'完成编辑':'编辑账号信息'" @click="editing=!editing">{{ editing?'完成':'编辑' }}</button></div>
           <dl class="info-list">
             <div><dt>昵称</dt><dd v-if="!editing">{{ auth.user?.nickname }}</dd><el-input v-else v-model="editForm.nickname" size="small" style="max-width:200px"/></div>
             <div><dt>登录邮箱</dt><dd>{{ auth.user?.email }}</dd></div>
@@ -41,7 +41,7 @@
         <section class="paper-card profile-card">
           <div class="card-title"><h2 class="serif">最近消息</h2></div>
           <div v-if="messages.length" class="message-list">
-            <div v-for="m in messages" :key="m.id" class="message-item" @click="m.ref_order_id?router.push(`/orders/${m.ref_order_id}`):null">
+            <div v-for="m in messages" :key="m.id" class="message-item" role="link" tabindex="0" @click="m.ref_order_id?router.push(`/orders/${m.ref_order_id}`):null" @keydown.enter="m.ref_order_id?router.push(`/orders/${m.ref_order_id}`):null" @keydown.space.prevent="m.ref_order_id?router.push(`/orders/${m.ref_order_id}`):null">
               <span class="msg-dot" :class="{unread:!m.is_read}"></span>
               <div><strong>{{ m.title }}</strong><p>{{ m.content }}</p></div>
               <time>{{ dateTime(m.created_at) }}</time>
@@ -83,43 +83,45 @@ async function confirmLogout(){try{await ElMessageBox.confirm('确定退出当�
 .head-left{display:flex;align-items:center;gap:22px}
 .avatar-ring{width:86px;height:86px;border-radius:50%;border:2px solid rgba(181,148,97,.5);display:grid;place-items:center;padding:4px}
 .big-avatar{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,var(--azure),var(--cinnabar));color:#fff4e1;display:grid;place-items:center;font-size:38px}
-.profile-head h1{font-size:26px;margin:0 0 6px;letter-spacing:.06em}
-.profile-head p{font-size:11px;color:var(--muted);margin:0 0 10px}
-.head-tags{display:flex;align-items:center;gap:10px}.join-date{font-size:9px;color:var(--muted)}
+.profile-head h1{font-size:var(--fs-h1);margin:0 0 6px;letter-spacing:.06em}
+.profile-head p{font-size:var(--fs-body-s);color:var(--ink-2);margin:0 0 10px}
+.head-tags{display:flex;align-items:center;gap:10px}.join-date{font-size:var(--fs-body-s);color:var(--ink-2)}
 .quota-card{text-align:center;padding:18px 28px;background:var(--paper);border:1px solid rgba(181,148,97,.3)}
-.quota-label{display:block;font-size:9px;letter-spacing:.15em;color:var(--gilt);margin-bottom:8px}
+.quota-label{display:block;font-size:var(--fs-body-s);letter-spacing:.15em;color:var(--gilt-dark);margin-bottom:8px}
 .quota-card strong{font-family:var(--serif);font-size:38px;color:var(--cinnabar);font-weight:500}
-.quota-card small{display:block;font-size:9px;color:var(--muted);margin:2px 0 12px}
+.quota-card small{display:block;font-size:var(--fs-body-s);color:var(--ink-2);margin:2px 0 12px}
 .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .profile-card{padding:26px}
 .card-title{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:15px;margin-bottom:8px}
-.card-title h2{font-size:17px;margin:0}
-.edit-btn{border:0;background:none;color:var(--cinnabar);font-size:10px}
+.card-title h2{font-size:var(--fs-h3);margin:0}
+.edit-btn{border:0;background:none;color:var(--cinnabar);font-size:var(--fs-body-s);min-height:44px}
 .quick-links{display:grid;gap:6px;padding-top:10px}
-.quick-links a{display:flex;align-items:center;gap:14px;padding:13px 12px;transition:.2s;border-radius:3px}
+.quick-links a{display:flex;align-items:center;gap:14px;padding:13px 12px;transition:.2s;border-radius:3px;min-height:44px}
 .quick-links a:hover{background:var(--paper)}
 .quick-icon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(169,75,60,.08);color:var(--cinnabar);font-size:17px;flex-shrink:0}
 .quick-links strong{display:block;font-size:12px;font-weight:500}
-.quick-links span{display:block;font-size:9px;color:var(--muted);margin-top:3px}
+.quick-links span{display:block;font-size:var(--fs-body-s);color:var(--ink-2);margin-top:3px}
 .quick-links .go{margin-left:auto;color:var(--gilt)}
 .info-list{margin:0;padding-top:8px}
 .info-list>div{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
 .info-list>div:last-child{border:0}
-.info-list dt{font-size:11px;color:var(--muted)}
-.info-list dd{margin:0;font-size:11px}
+.info-list dt{font-size:var(--fs-body-s);color:var(--ink-2)}
+.info-list dd{margin:0;font-size:var(--fs-body-s)}
 .message-list{display:grid;gap:4px;padding-top:10px;max-height:260px;overflow:auto}
-.message-item{display:flex;gap:10px;align-items:flex-start;padding:11px 10px;cursor:pointer;transition:.2s;border-radius:3px}
+.message-item{display:flex;gap:10px;align-items:flex-start;padding:11px 10px;cursor:pointer;transition:.2s;border-radius:3px;min-height:44px}
 .message-item:hover{background:var(--paper)}
 .msg-dot{width:7px;height:7px;border-radius:50%;background:#cfc8bb;margin-top:6px;flex-shrink:0}
 .msg-dot.unread{background:var(--cinnabar)}
-.message-item strong{font-size:11px;font-weight:500}
-.message-item p{font-size:9px;color:var(--muted);margin:3px 0 0;line-height:1.6}
-.message-item time{font-size:8px;color:var(--muted);margin-left:auto;white-space:nowrap}
+.message-item strong{font-size:var(--fs-body-s);font-weight:500}
+.message-item p{font-size:var(--fs-body-s);color:var(--ink-2);margin:3px 0 0;line-height:1.6}
+.message-item time{font-size:var(--fs-body-s);color:var(--ink-2);margin-left:auto;white-space:nowrap}
 .msg-empty{text-align:center;padding:45px 0;color:var(--muted)}
-.msg-empty .el-icon{font-size:26px;margin-bottom:10px}.msg-empty p{font-size:10px}
+.msg-empty .el-icon{font-size:26px;margin-bottom:10px}.msg-empty p{font-size:var(--fs-body-s)}
 .danger-zone{display:flex;flex-direction:column}
-.logout-btn{margin-top:auto;align-self:flex-start;display:flex;align-items:center;gap:7px;border:1px solid rgba(169,75,60,.4);background:none;color:var(--cinnabar);padding:10px 20px;font-size:11px}
+.logout-btn{margin-top:auto;align-self:flex-start;display:flex;align-items:center;gap:7px;border:1px solid rgba(169,75,60,.4);background:none;color:var(--cinnabar);padding:10px 20px;font-size:var(--fs-body-s);min-height:44px}
 .logout-btn:hover{background:rgba(169,75,60,.06)}
+.quota-card .btn,.quick-links a,.edit-btn,.message-item,.logout-btn{min-height:44px}
+.quota-card .btn:focus-visible,.quick-links a:focus-visible,.edit-btn:focus-visible,.message-item:focus-visible,.logout-btn:focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
 @media(max-width:768px){
   .profile-page{padding:35px 0 60px}
   .profile-head{flex-direction:column;gap:20px;align-items:flex-start;padding:24px 20px}
@@ -127,6 +129,7 @@ async function confirmLogout(){try{await ElMessageBox.confirm('确定退出当�
   .quota-card strong{font-size:28px}
   .quota-card small{display:none}
   .profile-grid{grid-template-columns:1fr}
-  .info-list dd{text-align:right;max-width:60%}
+  .info-list>div{flex-direction:column;align-items:flex-start;gap:4px}
+  .info-list dd{text-align:left;max-width:100%;white-space:normal;overflow-wrap:anywhere}
 }
 </style>

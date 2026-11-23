@@ -6,7 +6,7 @@
           <span class="eyebrow">THE HANDS BEHIND THE ART</span>
           <h1 class="display-title">让每一幅定制<br>都有<span>执笔的名字</span></h1>
           <p>他们研习线条、矿物色、水墨与丝线，也愿意倾听一个当代人的故事。镜绘让画师从作品背后走到你眼前，以本名或笔名署名，让每一份心意都有清晰的来处。</p>
-          <div class="hero-actions"><a href="#artist-story" class="btn btn-primary btn-lg">走进画师故事<el-icon><ArrowDown /></el-icon></a><RouterLink to="/create" class="btn btn-outline btn-lg">创作我的形象</RouterLink></div>
+          <div class="hero-actions"><a href="#artist-story" class="btn btn-primary btn-lg">走进画师故事<el-icon aria-hidden="true"><ArrowDown /></el-icon></a><RouterLink to="/create" class="btn btn-outline btn-lg">创作我的形象</RouterLink></div>
           <div class="hero-stats"><div><strong>{{ artists.length || 5 }}<sup>位</sup></strong><span>不同领域的创作者</span></div><i></i><div><strong>1 : 1</strong><span>专属定稿沟通</span></div><i></i><div><strong>100<sup>%</sup></strong><span>手绘作品署名</span></div></div>
         </div>
         <div class="hero-art fade-up-delay">
@@ -21,12 +21,12 @@
     <section class="section section-light artist-directory">
       <div class="container">
         <div class="directory-head"><SectionHeader eyebrow="ARTIST DIRECTORY" title="循着技艺，认识与你相宜的人" description="选择你偏好的创作方向。每位画师都有独特的观察方式，也会依据你的定稿与载体给出专业建议。" /><span class="directory-count">{{ filteredArtists.length.toString().padStart(2, '0') }} / {{ artists.length.toString().padStart(2, '0') }}</span></div>
-        <div class="filter-row"><button v-for="item in categories" :key="item" class="chip" :class="{ active: category === item }" @click="setCategory(item)">{{ item }}</button></div>
+        <div class="scroll-x-wrap"><div class="scroll-x" tabindex="0" aria-label="技艺筛选，可左右滑动"><div class="filter-row" role="group" aria-label="技艺筛选"><button v-for="item in categories" :key="item" type="button" class="chip" :class="{ active: category === item }" :aria-pressed="category===item" @click="setCategory(item)">{{ item }}</button></div></div></div>
         <div v-if="loading" class="directory-grid"><div v-for="i in 5" :key="i" class="artist-skeleton"><div class="skeleton"></div><span class="skeleton"></span><span class="skeleton"></span></div></div>
         <div v-else class="directory-grid">
-          <button v-for="artist in filteredArtists" :key="artist.id" class="artist-card" :class="{ active: activeId === artist.id }" @click="selectArtist(artist)">
-            <div class="artist-photo"><img :src="artistImage(artist)" :alt="`${artist.pen_name}的创作风格`" loading="lazy" /><span>{{ artist.location }}</span><i><el-icon><ArrowUpRight /></el-icon></i></div>
-            <div class="artist-info"><div><h3 class="serif">{{ artist.pen_name }}</h3><span>{{ artist.years || 10 }} 年创作</span></div><p>{{ specialtiesText(artist.specialties) }}</p><div class="artist-card-foot"><span><el-icon><StarFilled /></el-icon>{{ Number(artist.rating || 5).toFixed(1) }}</span><span>{{ artist.works_count || 0 }} 件定制作品</span></div></div>
+          <button v-for="artist in filteredArtists" :key="artist.id" type="button" class="artist-card" :class="{ active: activeId === artist.id }" :aria-pressed="activeId===artist.id" :aria-label="`查看画师 ${artist.pen_name} 的故事`" @click="selectArtist(artist)">
+            <div class="artist-photo"><img :src="artistImage(artist)" :alt="`${artist.pen_name}的创作风格`" loading="lazy" /><span>{{ artist.location }}</span><i><el-icon aria-hidden="true"><ArrowUpRight /></el-icon></i></div>
+            <div class="artist-info"><div><h3 class="serif">{{ artist.pen_name }}</h3><span>{{ artist.years || 10 }} 年创作</span></div><p>{{ specialtiesText(artist.specialties) }}</p><div class="artist-card-foot"><span><el-icon aria-hidden="true"><StarFilled /></el-icon>{{ Number(artist.rating || 5).toFixed(1) }}</span><span>{{ artist.works_count || 0 }} 件定制作品</span></div></div>
           </button>
         </div>
       </div>
@@ -52,7 +52,7 @@
         <div class="works-grid">
           <article v-for="(work, index) in activeArtist.works" :key="work.title" class="work-card"><div class="art-image"><img :src="work.image" :alt="work.title" loading="lazy" /><span>0{{ index + 1 }}</span></div><div><h4 class="serif">{{ work.title }}</h4><p>{{ work.medium }}</p></div></article>
         </div>
-        <div class="story-bottom"><p>定制时会依据你的形象、载体与构图偏好匹配画师；你也可以在沟通时表达对某位画师的偏好。</p><RouterLink to="/create" class="btn btn-primary">带着故事去创作<el-icon><ArrowRight /></el-icon></RouterLink></div>
+        <div class="story-bottom"><p>定制时会依据你的形象、载体与构图偏好匹配画师；你也可以在沟通时表达对某位画师的偏好。</p><RouterLink to="/create" class="btn btn-primary">带着故事去创作<el-icon aria-hidden="true"><ArrowRight /></el-icon></RouterLink></div>
       </div>
     </section>
 
@@ -169,7 +169,8 @@ function setCategory(item: string) {
 async function selectArtist(artist: ArtistProfile) {
   activeId.value = artist.id
   await nextTick()
-  document.getElementById('artist-story')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+  document.getElementById('artist-story')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
 }
 </script>
 
@@ -177,78 +178,81 @@ async function selectArtist(artist: ArtistProfile) {
 .artists-hero { padding: 76px 0 90px; overflow: hidden; position: relative; }
 .artists-hero::after { content: ''; position: absolute; width: 440px; height: 440px; border: 1px solid rgba(181,148,97,.12); border-radius: 50%; right: -270px; top: 30px; }
 .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 85px; align-items: center; }
-.hero-copy h1 { margin-top: 22px; }
+.hero-copy h1 { margin-top: 22px; font-size: var(--fs-d1); }
 .hero-copy h1 span { color: var(--cinnabar); }
 .hero-copy > p { max-width: 510px; margin: 28px 0 30px; color: var(--ink-soft); font-size: 14px; line-height: 2.1; }
 .hero-actions { display: flex; gap: 13px; }
 .hero-stats { display: flex; align-items: center; gap: 25px; margin-top: 40px; }
 .hero-stats > div { display: flex; flex-direction: column; gap: 6px; }
 .hero-stats strong { color: var(--azure); font: 500 24px var(--serif); }
-.hero-stats sup { color: var(--gilt); font: 10px var(--sans); margin-left: 3px; }
-.hero-stats span { color: var(--muted); font-size: 9px; letter-spacing: .05em; }
+.hero-stats sup { color: var(--gilt-dark); font: var(--fs-body-s) var(--sans); margin-left: 3px; }
+.hero-stats span { color: var(--ink-2); font-size: var(--fs-body-s); letter-spacing: .05em; }
 .hero-stats i { width: 1px; height: 30px; background: var(--line); }
 .hero-art { position: relative; height: 565px; max-width: 520px; width: 100%; justify-self: end; }
 .portrait-back { position: absolute; width: 350px; height: 490px; background: #e4ddcf; left: 60px; top: 28px; transform: rotate(5deg); }
 .portrait-main { position: absolute; left: 30px; top: 0; width: 355px; padding: 11px 11px 0; background: var(--paper-light); box-shadow: 0 25px 60px rgba(48,45,35,.14); transform: rotate(-2deg); }
 .portrait-main img { width: 100%; height: 470px; object-fit: cover; }
-.portrait-main > div { display: flex; justify-content: space-between; align-items: center; height: 43px; color: var(--muted); font-size: 9px; letter-spacing: .1em; }
-.portrait-main > div span:last-child { font-size: 8px; }
+.portrait-main > div { display: flex; justify-content: space-between; align-items: center; height: 43px; color: var(--ink-2); font-size: var(--fs-body-s); letter-spacing: .1em; }
+.portrait-main > div span:last-child { font-size: var(--fs-body-s); }
 .hero-art blockquote { position: absolute; right: -5px; bottom: 30px; margin: 0; padding: 22px 26px; background: var(--azure); color: #f4eddf; box-shadow: 0 18px 45px rgba(46,72,88,.22); font-size: 16px; line-height: 1.9; letter-spacing: .05em; }
 .hero-art .seal { position: absolute; right: 28px; top: 35px; transform: rotate(7deg); }
 .directory-head { display: flex; align-items: flex-end; justify-content: space-between; }
-.directory-count { color: var(--gilt); font: 14px var(--serif); letter-spacing: .15em; margin-bottom: 45px; }
+.directory-count { color: var(--gilt-dark); font: 14px var(--serif); letter-spacing: .15em; margin-bottom: 45px; }
 .filter-row { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 30px; }
+.filter-row .chip { min-height: 44px; }
+.filter-row .chip:focus-visible, .artist-card:focus-visible, .hero-actions a:focus-visible, .story-bottom .btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+.hero-actions a { scroll-margin-top: var(--sticky-offset); }
 .directory-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
 .artist-card { min-width: 0; padding: 0; border: 1px solid var(--line); background: transparent; color: inherit; text-align: left; transition: .3s; }
-.artist-card:hover, .artist-card.active { transform: translateY(-5px); border-color: rgba(169,75,60,.45); box-shadow: 0 16px 35px rgba(48,45,35,.07); }
+.artist-card:hover, .artist-card.active { transform: translateY(-2px); border-color: rgba(169,75,60,.45); box-shadow: 0 16px 35px rgba(48,45,35,.07); }
 .artist-card.active { box-shadow: inset 0 -2px var(--cinnabar), 0 16px 35px rgba(48,45,35,.07); }
 .artist-photo { position: relative; height: 260px; overflow: hidden; background: #eae3d6; }
 .artist-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
 .artist-card:hover img { transform: scale(1.04); }
-.artist-photo > span { position: absolute; left: 10px; top: 10px; padding: 4px 8px; background: rgba(252,250,245,.86); color: var(--azure); font-size: 9px; }
+.artist-photo > span { position: absolute; left: 10px; top: 10px; padding: 4px 8px; background: rgba(252,250,245,.86); color: var(--azure); font-size: var(--fs-body-s); }
 .artist-photo > i { position: absolute; right: 10px; bottom: 10px; width: 30px; height: 30px; display: grid; place-items: center; background: rgba(252,250,245,.9); color: var(--cinnabar); border-radius: 50%; opacity: 0; transition: .25s; }
 .artist-card:hover .artist-photo > i, .artist-card.active .artist-photo > i { opacity: 1; }
 .artist-info { padding: 16px 14px; }
 .artist-info > div:first-child { display: flex; align-items: baseline; justify-content: space-between; gap: 5px; }
-.artist-info h3 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: .06em; }
-.artist-info > div:first-child > span { color: var(--gilt); font-size: 8px; white-space: nowrap; }
-.artist-info > p { height: 30px; margin: 8px 0 14px; color: var(--muted); font-size: 10px; line-height: 1.5; }
-.artist-card-foot { display: flex; justify-content: space-between; gap: 5px; padding-top: 11px; border-top: 1px solid var(--line); color: var(--muted); font-size: 8px; }
-.artist-card-foot span:first-child { display: flex; align-items: center; gap: 3px; color: var(--gilt); }
+.artist-info h3 { margin: 0; font-size: var(--fs-h3); font-weight: 600; letter-spacing: .06em; }
+.artist-info > div:first-child > span { color: var(--ink-2); font-size: var(--fs-body-s); white-space: nowrap; }
+.artist-info > p { min-height: 30px; margin: 8px 0 14px; color: var(--ink-2); font-size: var(--fs-body-s); line-height: 1.5; }
+.artist-card-foot { display: flex; justify-content: space-between; gap: 5px; padding-top: 11px; border-top: 1px solid var(--line); color: var(--ink-2); font-size: var(--fs-body-s); }
+.artist-card-foot span:first-child { display: flex; align-items: center; gap: 3px; color: var(--gilt-dark); }
 .artist-skeleton { padding-bottom: 20px; border: 1px solid var(--line); }
 .artist-skeleton > div { height: 260px; margin-bottom: 16px; }
 .artist-skeleton > span { display: block; height: 15px; margin: 10px 14px; }
 .artist-skeleton > span:last-child { width: 60%; height: 10px; }
-.artist-story { scroll-margin-top: 25px; }
+.artist-story { scroll-margin-top: var(--sticky-offset); }
 .story-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 90px; align-items: center; }
 .story-portrait { position: relative; padding: 0 0 50px 30px; }
 .story-image { height: 465px; padding: 10px; background: var(--paper-light); box-shadow: 0 20px 55px rgba(48,45,35,.12); transform: rotate(-2deg); }
 .story-image img { width: 100%; height: 100%; object-fit: cover; }
 .story-signature { position: absolute; left: 0; bottom: 0; min-width: 205px; padding: 18px 22px; background: var(--paper-light); border-left: 3px solid var(--cinnabar); box-shadow: 0 12px 35px rgba(48,45,35,.09); }
-.story-signature > span { display: block; color: var(--gilt); font-size: 8px; letter-spacing: .18em; }
+.story-signature > span { display: block; color: var(--gilt-dark); font-size: var(--fs-body-s); letter-spacing: .18em; }
 .story-signature strong { display: block; margin: 6px 0; font-size: 25px; font-weight: 600; letter-spacing: .1em; }
-.story-signature small { color: var(--muted); font-size: 9px; }
+.story-signature small { color: var(--ink-2); font-size: var(--fs-body-s); }
 .story-copy h2 { display: flex; align-items: baseline; gap: 17px; margin: 17px 0 15px; font-size: 39px; font-weight: 600; letter-spacing: .08em; }
-.story-copy h2 span { color: var(--muted); font: 10px var(--sans); letter-spacing: .08em; }
+.story-copy h2 span { color: var(--ink-2); font: var(--fs-body-s) var(--sans); letter-spacing: .08em; }
 .story-copy blockquote { margin: 0 0 20px; padding: 14px 18px; border-left: 1px solid var(--gilt); background: rgba(181,148,97,.055); color: var(--azure); font-size: 15px; line-height: 1.8; }
-.story-copy > p { margin: 12px 0; color: var(--muted); font-size: 12px; line-height: 2.05; text-align: justify; }
+.story-copy > p { margin: 12px 0; color: var(--ink-2); font-size: var(--fs-body-s); line-height: 2.05; text-align: justify; }
 .story-meta { display: flex; gap: 35px; margin-top: 23px; }
 .story-meta > div { display: flex; flex-direction: column; gap: 3px; }
 .story-meta strong { color: var(--cinnabar); font: 22px var(--serif); }
-.story-meta span { color: var(--muted); font-size: 9px; }
+.story-meta span { color: var(--ink-2); font-size: var(--fs-body-s); }
 .story-tags { display: flex; gap: 8px; margin-top: 20px; }
-.story-tags span { padding: 5px 11px; border: 1px solid var(--line); color: var(--azure); font-size: 10px; }
+.story-tags span { padding: 5px 11px; border: 1px solid var(--line); color: var(--azure); font-size: var(--fs-body-s); }
 .works-head { display: flex; align-items: flex-end; justify-content: space-between; margin: 75px 0 25px; padding-top: 30px; border-top: 1px solid var(--line); }
 .works-head h3 { margin: 12px 0 0; font-size: 24px; font-weight: 600; letter-spacing: .06em; }
-.works-head > span { color: var(--muted); font-size: 10px; }
+.works-head > span { color: var(--ink-2); font-size: var(--fs-body-s); }
 .works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 23px; }
 .work-card { margin: 0; }
 .work-card .art-image { position: relative; height: 330px; }
-.work-card .art-image > span { position: absolute; left: 12px; top: 12px; width: 28px; height: 28px; display: grid; place-items: center; background: rgba(252,250,245,.85); color: var(--gilt); font: 9px var(--serif); }
-.work-card h4 { margin: 14px 0 5px; font-size: 17px; font-weight: 600; letter-spacing: .06em; }
-.work-card p { margin: 0; color: var(--muted); font-size: 10px; }
+.work-card .art-image > span { position: absolute; left: 12px; top: 12px; width: 28px; height: 28px; display: grid; place-items: center; background: rgba(252,250,245,.85); color: var(--gilt-dark); font: var(--fs-caption) var(--serif); }
+.work-card h4 { margin: 14px 0 5px; font-size: var(--fs-h3); font-weight: 600; letter-spacing: .06em; }
+.work-card p { margin: 0; color: var(--ink-2); font-size: var(--fs-body-s); }
 .story-bottom { display: flex; align-items: center; justify-content: space-between; gap: 25px; margin-top: 35px; padding: 23px 26px; background: #eee8dc; }
-.story-bottom p { max-width: 670px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
+.story-bottom p { max-width: 670px; margin: 0; color: var(--ink-2); font-size: var(--fs-body-s); line-height: 1.8; }
 .collaboration-section { padding: 85px 0; background: var(--azure); color: var(--paper-light); }
 .collaboration-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 90px; }
 .collaboration-section .eyebrow { color: #d0b482; }
@@ -256,9 +260,9 @@ async function selectArtist(artist: ArtistProfile) {
 .collaboration-steps > div { display: flex; gap: 20px; padding: 18px 0; border-bottom: 1px solid rgba(246,242,233,.13); }
 .collaboration-steps > div:first-child { padding-top: 0; }
 .collaboration-steps > div > span { color: #d0b482; font: 12px var(--serif); padding-top: 4px; }
-.collaboration-steps h3 { margin: 0 0 6px; font-size: 17px; font-weight: 500; }
-.collaboration-steps p { margin: 0; color: rgba(246,242,233,.58); font-size: 11px; line-height: 1.8; }
-@media (max-width: 1050px) {
+.collaboration-steps h3 { margin: 0 0 6px; font-size: var(--fs-h3); font-weight: 500; }
+.collaboration-steps p { margin: 0; color: var(--on-dark-muted); font-size: var(--fs-body-s); line-height: 1.8; }
+@media (max-width: 1080px) {
   .hero-grid { gap: 35px; }
   .hero-art { transform: scale(.9); transform-origin: right center; }
   .directory-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
